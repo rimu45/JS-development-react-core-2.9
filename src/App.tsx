@@ -27,6 +27,17 @@ function App() {
     },
   ]);
 
+  function addTask(value: string) {
+    const newTask = {
+      id: tasks.length + 1,
+      description: value,
+      completed: false,
+      createdAt: new Date()
+    }
+
+    setTasks((prev) => [...prev, newTask]);
+  }
+
   function toggleTask(id: number) {
     setTasks(
       tasks.map((task) => {
@@ -83,7 +94,7 @@ function App() {
 
   return (
     <section className="todoapp">
-      <NewTaskForm />
+      <NewTaskForm onAdd = {addTask}/>
       <section className="main">
         <TaskList
           tasks={tasks}
@@ -91,6 +102,7 @@ function App() {
           onEdit={startEditing}
           onSave={saveTask}
           onDelete={deleteTask}
+
         />
         <Footer />
       </section>
