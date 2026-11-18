@@ -1,11 +1,23 @@
 import TaskFilter from "./TaskFilter";
 
-function Footer() {
+type FooterProps = {
+  filter: string;
+  setFilter: (filter: string) => void;
+  incomplete: number
+  clearCompleted: () => void
+};
+
+function Footer({ filter, setFilter, incomplete, clearCompleted }: FooterProps) {
   return (
     <footer className="footer">
-      <span className="todo-count">1 items left</span>
-      <TaskFilter />
-      <button className="clear-completed">Clear completed</button>
+      <span className="todo-count">{incomplete} items left</span>
+      <TaskFilter 
+      filter={filter} 
+      setFilter={setFilter} 
+      />
+      <button className="clear-completed"
+      onClick={clearCompleted}
+      >Clear completed</button>
     </footer>
   );
 }

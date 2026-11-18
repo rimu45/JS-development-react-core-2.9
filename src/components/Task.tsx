@@ -14,6 +14,7 @@ function Task(props: {
   const [value, setValue] = useState(props.description);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(props.description);
   }, [props.description]);
 
