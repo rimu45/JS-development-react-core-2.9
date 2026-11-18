@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
-function Task(props: {
+function Task({editing = false, ...props}: {
   id: number;
   description: string;
   completed: boolean;
@@ -20,7 +21,7 @@ function Task(props: {
 
   return (
     <li
-      className={`${props.completed ? 'completed' : ''} ${props.editing ? 'editing' : ''}`}
+      className={`${props.completed ? 'completed' : ''} ${editing ? 'editing' : ''}`}
     >
       <div className="view">
         <input
@@ -35,6 +36,12 @@ function Task(props: {
 
         <label htmlFor={`toggle-${props.id}`}>
           <span className="description">{props.description}</span>
+          <span className="created">
+          created {formatDistanceToNow(props.createdAt, {
+            addSuffix: true,
+            includeSeconds: true
+          })}
+        </span>
         </label>
 
         <button
@@ -51,7 +58,7 @@ function Task(props: {
         ></button>
       </div>
 
-      {props.editing && (
+      {editing && (
         <input
           className="edit"
           value={value}
