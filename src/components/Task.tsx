@@ -1,27 +1,34 @@
-import { useState, useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import { useState, useEffect } from "react";
+import { formatDistance } from "date-fns";
+import type { TodoTask } from "../types";
 
-function Task({editing = false, ...props}: {
-  id: number;
-  description: string;
-  completed: boolean;
-  createdAt: Date;
-  editing?: boolean;
-  onToggle: (id: number) => void;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
-  onSave: (id: number, description: string) => void;
-}) {
+type TaskProps = TodoTask & {
+  onToggle: (id: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  onSave: (id: string, description: string) => void;
+  onCancel: (id: string) => void;
+};
+function Task({ editing = false, ...props }: TaskProps) {
   const [value, setValue] = useState(props.description);
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(props.description);
   }, [props.description]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <li
-      className={`${props.completed ? 'completed' : ''} ${editing ? 'editing' : ''}`}
+      className={`${props.completed ? "completed" : ""} ${editing ? "editing" : ""}`}
     >
       <div className="view">
         <input
@@ -37,11 +44,12 @@ function Task({editing = false, ...props}: {
         <label htmlFor={`toggle-${props.id}`}>
           <span className="description">{props.description}</span>
           <span className="created">
-          created {formatDistanceToNow(props.createdAt, {
-            addSuffix: true,
-            includeSeconds: true
-          })}
-        </span>
+            created{" "}
+            {formatDistance(props.createdAt, now, {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
+          </span>
         </label>
 
         <button
@@ -51,8 +59,9 @@ function Task({editing = false, ...props}: {
           }}
         ></button>
 
-        <button className="icon icon-destroy"
-         onClick={() => {
+        <button
+          className="icon icon-destroy"
+          onClick={() => {
             props.onDelete(props.id);
           }}
         ></button>
@@ -66,10 +75,14 @@ function Task({editing = false, ...props}: {
             setValue(event.target.value);
           }}
           onKeyDown={(event) => {
-            if (event.key === 'Enter') {
+            if (event.key === "Enter") {
               props.onSave(props.id, value);
             }
+            if (event.key === "Escape") {
+              props.onCancel(props.id);
+            }
           }}
+          onBlur={() => props.onSave(props.id, value.trim())}
           autoFocus
         />
       )}

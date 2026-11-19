@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface NewTaskFormProps {
   onAdd: (description: string) => void;
 }
 
 function NewTaskForm({ onAdd }: NewTaskFormProps) {
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   return (
     <header className="header">
       <h1>todos</h1>
@@ -16,9 +16,12 @@ function NewTaskForm({ onAdd }: NewTaskFormProps) {
         placeholder="What needs to be done?"
         autoFocus
         onKeyDown={(event) => {
-          if(event.key === 'Enter' && event.currentTarget.value.trim() !== '') {
+          if (
+            event.key === "Enter" &&
+            event.currentTarget.value.trim() !== ""
+          ) {
             onAdd(event.currentTarget.value);
-            setDescription('');
+            setDescription("");
           }
         }}
       />
